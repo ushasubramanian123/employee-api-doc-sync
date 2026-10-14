@@ -34,4 +34,4 @@ CR-2 remains a non-blocking observation: existing architecture documentation con
 
 ## Pull Request
 
-No pull request has been created yet.
+No pull request was created because the available GitHub browser session requires sign-in, and no authenticated PR-creation CLI/API is available here. After signing in, open [the comparison page](https://github.com/ushasubramanian123/employee-api-doc-sync/compare/main...feature/employee-api-documentation-sync?expand=1), confirm `main` is the base and `feature/employee-api-documentation-sync` is the compare branch, then select **Create pull request**.
