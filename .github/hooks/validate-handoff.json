@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .github\\hooks\\validate-handoff.ps1",
+        "windows": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .github\\hooks\\validate-handoff.ps1",
+        "cwd": ".",
+        "timeout": 15
+      }
+    ]
+  }
+}
