@@ -1,0 +1,56 @@
+{
+  "stage": "implementation-planning",
+  "status": "completed",
+  "summary": "API functionality is already implemented; remaining work is to execute and verify the documentation-sync workflow, preserve its approval gate, and avoid rebuilding the application.",
+  "artifacts": [
+    ".sdlc/implementation-plan.json",
+    "src/main/java/com/example/employeeapidocsync/EmployeeController.java",
+    "src/main/java/com/example/employeeapidocsync/CreateEmployeeRequest.java",
+    "src/main/java/com/example/employeeapidocsync/Employee.java",
+    "src/main/java/com/example/employeeapidocsync/EmployeeService.java",
+    "src/test/java/com/example/employeeapidocsync/EmployeeApiDocSyncApplicationTests.java",
+    "pom.xml",
+    "docs/api-docs.md",
+    ".github/prompts/sync-api-docs.prompt.md"
+  ],
+  "decisions": [
+    {
+      "completed": "One EmployeeController declares GET /api/employees, GET /api/employees/{id}, and POST /api/employees; request/response DTOs, service, error handling, validation, MockMvc tests, Maven configuration, and matching API documentation already exist. User reports all three routes were manually verified."
+    },
+    {
+      "approval": "pending",
+      "tasks": [
+        {
+          "id": "sync-and-validate-api-docs",
+          "status": "pending",
+          "description": "Run the existing sync prompt across all Spring REST controllers; resolve mappings and DTO details; reconcile docs/api-docs.md against controller, tests, and available evidence; change only endpoint sections and report unsupported required evidence.",
+          "depends_on": []
+        },
+        {
+          "id": "verify-sync-idempotence",
+          "status": "pending",
+          "description": "Render again from unchanged evidence and verify byte-identical endpoint output with no unrelated documentation changes.",
+          "depends_on": [
+            "sync-and-validate-api-docs"
+          ]
+        },
+        {
+          "id": "request-documentation-approval",
+          "status": "pending",
+          "description": "Present the validated docs/api-docs.md diff and wait for explicit human APPROVED before any commit.",
+          "depends_on": [
+            "verify-sync-idempotence"
+          ]
+        }
+      ]
+    },
+    {
+      "decision": "Do not recreate or change the Employee API, add OpenAPI/Swagger, or introduce dependencies; these are unnecessary for the remaining approved documentation-sync work."
+    },
+    {
+      "decision": "Keep generated endpoint reference docs/api-docs.md distinct from the terminal PR feature summary; neither substitutes for the other."
+    }
+  ],
+  "blockers": [],
+  "next_agent": "implementation"
+}
