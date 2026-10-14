@@ -34,4 +34,4 @@ CR-2 remains a non-blocking observation: existing architecture documentation con
 
 ## Pull Request
 
-PR creation was attempted against `main` from `feature/employee-api-documentation-sync` in the signed-in GitHub session, but GitHub rejected it with `must be a collaborator`. No PR was created. A repository administrator must grant the signed-in account collaborator access (or an authorized collaborator must create the PR), then retry from [the comparison page](https://github.com/ushasubramanian123/employee-api-doc-sync/compare/main...feature/employee-api-documentation-sync?expand=1).
+Pull request: [#1 — Employee API documentation sync](https://github.com/ushasubramanian123/employee-api-doc-sync/pull/1), targeting `main` from `feature/employee-api-documentation-sync`.
