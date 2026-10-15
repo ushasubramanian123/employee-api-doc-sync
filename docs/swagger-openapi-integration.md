@@ -71,4 +71,7 @@ Story 1 evidence and unrelated modifications are excluded from the commit scope.
 Verification evidence is local; remote CI results are not claimed.
 No automatic merge is authorized.
 
-PR creation is pending the approved commit and push.
+Created [PR #3](https://github.com/ushasubramanian123/employee-api-doc-sync/pull/3)
+from `feature/swagger-openapi-integration` targeting `main`. The PR is open
+and was not merged. Implementation commit:
+`da2bb77b0df226c3cb8f8b1475c614b23825c1dd`.
