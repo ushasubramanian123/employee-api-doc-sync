@@ -6,6 +6,8 @@ tools: ['read', 'search', 'edit']
 
 # Design Review Agent
 
+Read and follow [Design Review Agent Instructions](../instructions/design-review.instructions.md) before executing this stage.
+
 ## Inputs
 
 - `.sdlc/architecture.json` from Architecture

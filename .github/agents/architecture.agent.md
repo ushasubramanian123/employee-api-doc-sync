@@ -6,6 +6,8 @@ tools: ['read', 'search', 'edit']
 
 # Architecture Agent
 
+Read and follow [Architecture Agent Instructions](../instructions/architecture.instructions.md) before executing this stage.
+
 ## Inputs
 
 - `.sdlc/requirements.json` from Requirements

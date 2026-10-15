@@ -8,6 +8,8 @@ disable-model-invocation: false
 
 # Requirements Agent
 
+Read and follow [Requirements Agent Instructions](../instructions/requirements.instructions.md) before executing this stage.
+
 Analyze `docs/user-story.md` as the first SDLC stage.
 
 ## Responsibilities
