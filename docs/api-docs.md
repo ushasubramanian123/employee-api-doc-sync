@@ -1,5 +1,7 @@
 # Employee API
 
+Interactive API documentation is available at `/swagger-ui/index.html`, with the OpenAPI document at `/v3/api-docs`.
+
 ## `GET /api/employees`
 
 Returns the employee collection.

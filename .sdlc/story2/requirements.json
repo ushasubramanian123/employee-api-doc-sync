@@ -1,0 +1,87 @@
+{
+  "stage": "requirements",
+  "status": "completed",
+  "summary": "Extracted testable Swagger/OpenAPI integration requirements for Story 2 from the story and existing API implementation; no required clarification is unresolved.",
+  "artifacts": [
+    ".sdlc/story2/requirements.json"
+  ],
+  "decisions": [
+    {
+      "id": "FR-1",
+      "requirement": "Provide Swagger UI at /swagger-ui/index.html and OpenAPI JSON at /v3/api-docs.",
+      "source": "docs/story2.md AC1-2"
+    },
+    {
+      "id": "FR-2",
+      "requirement": "Document GET /api/employees, GET /api/employees/{id}, and POST /api/employees; do not add business endpoints.",
+      "source": "docs/story2.md AC3, Technical Constraints; src/main/java/com/example/employeeapidocsync/EmployeeController.java"
+    },
+    {
+      "id": "FR-3",
+      "requirement": "Expose Employee fields id, name, email and CreateEmployeeRequest fields name, email in request/response schemas.",
+      "source": "docs/story2.md AC4; src/main/java/com/example/employeeapidocsync/Employee.java; src/main/java/com/example/employeeapidocsync/CreateEmployeeRequest.java"
+    },
+    {
+      "id": "FR-4",
+      "requirement": "Document existing responses: GET collection 200; GET by ID 200 and 404; POST 201 and 400.",
+      "source": "docs/api-docs.md; src/main/java/com/example/employeeapidocsync/EmployeeController.java; src/main/java/com/example/employeeapidocsync/ApiExceptionHandler.java"
+    },
+    {
+      "id": "FR-5",
+      "requirement": "Keep existing API behavior unchanged and ensure existing tests continue to pass.",
+      "source": "docs/story2.md AC6-7"
+    },
+    {
+      "id": "FR-6",
+      "requirement": "Add minimal verification that Swagger UI and OpenAPI JSON are available.",
+      "source": "docs/story2.md AC8"
+    },
+    {
+      "id": "FR-7",
+      "requirement": "Update API documentation only as needed for this integration.",
+      "source": "docs/story2.md AC9; existing API documentation: docs/api-docs.md"
+    },
+    {
+      "id": "NFR-1",
+      "requirement": "Use the existing Spring Boot project and a springdoc-openapi dependency compatible with it.",
+      "source": "docs/story2.md Technical Constraints; pom.xml"
+    },
+    {
+      "id": "NFR-2",
+      "requirement": "Make no database or authentication changes and avoid unnecessary refactoring.",
+      "source": "docs/story2.md Technical Constraints"
+    },
+    {
+      "id": "AC-1",
+      "criterion": "GET /swagger-ui/index.html is accessible.",
+      "source": "docs/story2.md AC1"
+    },
+    {
+      "id": "AC-2",
+      "criterion": "GET /v3/api-docs is accessible and returns OpenAPI JSON.",
+      "source": "docs/story2.md AC2"
+    },
+    {
+      "id": "AC-3",
+      "criterion": "OpenAPI documents all three specified routes and their existing response codes and Employee/CreateEmployeeRequest fields.",
+      "source": "docs/story2.md AC3-5; docs/api-docs.md; existing controller and model records"
+    },
+    {
+      "id": "AC-4",
+      "criterion": "Existing API behavior is unchanged and the existing test suite passes.",
+      "source": "docs/story2.md AC6-7"
+    },
+    {
+      "id": "AC-5",
+      "criterion": "Minimal Swagger/OpenAPI availability verification is added; API documentation is updated only where needed.",
+      "source": "docs/story2.md AC8-9"
+    },
+    {
+      "id": "APPROVAL",
+      "status": "approved",
+      "requirement": "Human explicitly selected 'Approve Story 2 requirements' via ask_user after reviewing the summary of this handoff, as confirmed by the user on 2026-10-15. Approval permits Architecture analysis; later human approval gates remain mandatory."
+    }
+  ],
+  "blockers": [],
+  "next_agent": "architecture"
+}

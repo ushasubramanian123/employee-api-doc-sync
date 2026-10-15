@@ -1,0 +1,53 @@
+{
+  "stage": "architecture",
+  "status": "completed",
+  "summary": "Revised the minimal springdoc integration proposal to require explicit OpenAPI metadata for the existing 404 and 400 ErrorResponse cases; requirements remain unchanged.",
+  "artifacts": [
+    ".sdlc/story2/requirements.json",
+    ".sdlc/story2/design-review.json",
+    "pom.xml",
+    "src/main/java/com/example/employeeapidocsync/EmployeeController.java",
+    "src/main/java/com/example/employeeapidocsync/Employee.java",
+    "src/main/java/com/example/employeeapidocsync/CreateEmployeeRequest.java",
+    "src/main/java/com/example/employeeapidocsync/ErrorResponse.java",
+    "src/main/java/com/example/employeeapidocsync/ApiExceptionHandler.java",
+    "src/test/java/com/example/employeeapidocsync/EmployeeApiDocSyncApplicationTests.java",
+    "docs/api-docs.md",
+    "docs/story2.md"
+  ],
+  "decisions": [
+    {
+      "id": "dependency",
+      "decision": "Proposal: add org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9 for Spring MVC OpenAPI generation and Swagger UI; no separate UI dependency.",
+      "compatibility_evidence": "pom.xml uses Spring Boot 3.5.6, Java 17, and Spring MVC. The springdoc 2.x Spring Boot 3 generation is the compatible family; dependency resolution and runtime compatibility in this repository remain unverified."
+    },
+    {
+      "id": "generation-and-contract",
+      "decision": "Proposal: let springdoc discover existing mappings and record models. Explicit OpenAPI response metadata is mandatory for GET /api/employees/{id} 404 and POST /api/employees 400, each using the existing ErrorResponse schema; these responses must not depend on conditional metadata. Document the existing success responses and schemas as well.",
+      "contract": [
+        "GET /api/employees: 200 JSON array of Employee {id, name, email}.",
+        "GET /api/employees/{id}: 200 Employee; 404 ErrorResponse {error}.",
+        "POST /api/employees: JSON CreateEmployeeRequest {name, email}; 201 Employee; 400 ErrorResponse {error}."
+      ],
+      "evidence": "EmployeeController.java implements the three mappings and response statuses; Employee.java, CreateEmployeeRequest.java, and ErrorResponse.java define the response, request, and error records. ApiExceptionHandler.java handles POST validation and malformed-body errors; docs/api-docs.md records the existing API responses."
+    },
+    {
+      "id": "behavior-and-data-flow",
+      "decision": "Keep the existing controller, service, validation, exception handling, and in-memory data flow authoritative. The proposal adds documentation only; it must not change API behavior, persistence, authentication, or business routes."
+    },
+    {
+      "id": "verification-and-docs",
+      "decision": "Proposal: retain the existing JUnit 5 / Spring Boot MockMvc tests and add minimal checks for GET /v3/api-docs returning OpenAPI JSON and GET /swagger-ui/index.html being accessible. Update docs/api-docs.md only as needed. These checks and changes have not been implemented or run."
+    },
+    {
+      "id": "assumptions-and-gates",
+      "decision": "Assume the required standard springdoc paths remain enabled. Requirements are approved. Human explicitly selected 'Approve Story 2 architecture/design' via ask_user after reviewing the design summary and compatibility caveat, as confirmed by the user on 2026-10-15. Architecture/design is human-approved for implementation planning only; explicit human plan/development approval is required before implementation."
+    },
+    {
+      "id": "risk",
+      "decision": "The proposed dependency version's resolution and behavior with this exact project have not been tested; verify dependency availability, compatibility, and endpoint/security configuration during implementation and verification. No runtime availability or test-pass claim is made."
+    }
+  ],
+  "blockers": [],
+  "next_agent": "design-review"
+}

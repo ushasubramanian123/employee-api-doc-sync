@@ -1,0 +1,78 @@
+{
+  "stage": "implementation-planning",
+  "status": "completed",
+  "summary": "Validated the Story 2 handoffs and existing API contract; defined a minimal implementation plan. No implementation work has started.",
+  "artifacts": [
+    ".sdlc/story2/implementation-plan.json"
+  ],
+  "decisions": [
+    {
+      "id": "handoff-validation",
+      "decision": "The Story 2 requirements handoff is completed with explicit human approval; the architecture handoff is completed and records explicit human approval; the immediate predecessor design review is completed with approval and no blockers. The approved design resolves the required 404 and 400 ErrorResponse metadata. Existing pom.xml sets Spring Boot 3.5.6 and Java 17; existing controller, model records, exception handler, tests, and docs/api-docs.md establish the three-route API contract. No prior work is treated as implementation completion."
+    },
+    {
+      "id": "tasks",
+      "tasks": [
+        {
+          "id": "T1",
+          "task": "Add the proposed org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9 dependency to the existing Maven project and verify dependency resolution and runtime compatibility against the exact existing Spring Boot 3.5.6 version.",
+          "depends_on": [],
+          "completion_criteria": [
+            "Maven resolves the exact springdoc artifact/version with the project's Spring Boot 3.5.6 dependency management and Java 17 configuration.",
+            "The application context starts with the dependency; record any actual dependency or runtime incompatibility before proceeding."
+          ]
+        },
+        {
+          "id": "T2",
+          "task": "Add explicit OpenAPI metadata to the existing three controller operations, preserving existing behavior and adding no business endpoints.",
+          "depends_on": [
+            "T1"
+          ],
+          "completion_criteria": [
+            "Document GET /api/employees with 200 and an Employee array response schema containing id, name, and email.",
+            "Document GET /api/employees/{id} with 200 Employee and explicit 404 ErrorResponse {error} responses.",
+            "Document POST /api/employees with CreateEmployeeRequest {name, email}, 201 Employee, and explicit 400 ErrorResponse {error} responses.",
+            "The error response metadata is explicit and does not depend on conditional inference; no controller behavior, routes, persistence, or authentication are changed."
+          ]
+        },
+        {
+          "id": "T3",
+          "task": "Add focused MockMvc/OpenAPI contract tests for documentation availability and the documented API surface.",
+          "depends_on": [
+            "T2"
+          ],
+          "completion_criteria": [
+            "GET /swagger-ui/index.html is accessible and GET /v3/api-docs returns OpenAPI JSON.",
+            "Assertions verify the exact existing route/method set: GET /api/employees, GET /api/employees/{id}, and POST /api/employees.",
+            "Assertions verify documented response status sets: collection GET 200; ID GET 200 and 404; POST 201 and 400.",
+            "Assertions verify the Employee, CreateEmployeeRequest, and ErrorResponse schema property names and types as applicable, and verify the success response schemas are Employee array, Employee, and Employee respectively and the 404/400 schemas are ErrorResponse."
+          ]
+        },
+        {
+          "id": "T4",
+          "task": "Run the focused documentation tests and existing API regression suite, then update the existing API documentation only where needed.",
+          "depends_on": [
+            "T3"
+          ],
+          "completion_criteria": [
+            "Focused tests and the complete existing Maven test suite pass.",
+            "Existing API regression checks continue to demonstrate the current collection, by-ID, create, validation-error, and malformed-body behavior.",
+            "Update docs/api-docs.md only if needed to reflect verified paths or contract details; make no unrelated documentation changes."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "approval-gates",
+      "plan_approval": "approved",
+      "development_approval": "approved",
+      "decision": "Human explicitly stated 'APPROVED – Story 2 Development Authorized', as confirmed by the user on 2026-10-15, approving implementation based on the approved architecture, design, and plan. Implementation, Code Review, and Verification are authorized. No Git operations are authorized; stop after successful Verification before PR."
+    },
+    {
+      "id": "git-and-terminal-deliverable",
+      "decision": "Do not create the feature/swagger-openapi-integration branch or perform commits, pushes, or PR operations without separate explicit human Git authorization. docs/swagger-openapi-integration.md is a terminal PR-stage deliverable, not part of this plan-writing stage."
+    }
+  ],
+  "blockers": [],
+  "next_agent": "implementation"
+}
