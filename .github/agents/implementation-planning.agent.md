@@ -6,6 +6,8 @@ tools: ['read', 'search', 'edit']
 
 # Implementation Planning Agent
 
+Read and follow [Implementation Planning Agent Instructions](../instructions/implementation-planning.instructions.md) before executing this stage.
+
 ## Inputs
 
 - `.sdlc/design-review.json` from Design Review

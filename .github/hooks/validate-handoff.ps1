@@ -5,7 +5,7 @@ if (-not (Test-Path -LiteralPath $handoffDirectory -PathType Container)) {
     exit 0
 }
 
-$handoffFiles = @(Get-ChildItem -LiteralPath $handoffDirectory -Filter '*.json' -File | Sort-Object Name)
+$handoffFiles = @(Get-ChildItem -LiteralPath $handoffDirectory -Filter '*.json' -File -Recurse | Sort-Object Name)
 if ($handoffFiles.Count -eq 0) {
     exit 0
 }

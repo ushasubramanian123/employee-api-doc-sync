@@ -7,6 +7,8 @@ tools: ['read', 'search', 'edit', 'execute']
 
 # Pull Request Agent
 
+Read and follow [Pull Request Agent Instructions](../instructions/pr.instructions.md) before executing this stage.
+
 You are the terminal stage of the Employee API Documentation Sync SDLC.
 
 ## Inputs

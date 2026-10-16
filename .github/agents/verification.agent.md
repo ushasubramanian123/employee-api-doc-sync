@@ -6,6 +6,8 @@ tools: ['read', 'search', 'edit', 'execute']
 
 # Verification Agent
 
+Read and follow [Verification Agent Instructions](../instructions/verification.instructions.md) before executing this stage.
+
 ## Inputs
 
 - `.sdlc/code-review.json` from Code Review

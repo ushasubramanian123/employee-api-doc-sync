@@ -6,6 +6,8 @@ tools: ['read', 'search', 'edit', 'execute']
 
 # Implementation Agent
 
+Read and follow [Implementation Agent Instructions](../instructions/implementation.instructions.md) before executing this stage.
+
 ## Inputs
 
 - `.sdlc/implementation-plan.json` from Implementation Planning

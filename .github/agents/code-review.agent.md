@@ -6,6 +6,8 @@ tools: ['read', 'search', 'execute', 'edit']
 
 # Code Review Agent
 
+Read and follow [Code Review Agent Instructions](../instructions/code-review.instructions.md) before executing this stage.
+
 ## Inputs
 
 - `.sdlc/implementation.json` from Implementation
