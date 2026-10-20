@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,8 +39,11 @@ public class EmployeeController {
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                     array = @ArraySchema(schema = @Schema(implementation = Employee.class))))
-    public List<Employee> findAll() {
-        return employeeService.findAll();
+    public List<Employee> findAll(
+            @Parameter(description = "Optional department filter; trimmed and matched case-insensitively and exactly. "
+                    + "Blank or unknown values return an empty list.")
+            @RequestParam(required = false) String department) {
+        return employeeService.findAll(department);
     }
 
     @GetMapping("/{id}")

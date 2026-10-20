@@ -1,0 +1,32 @@
+{
+  "stage": "design-review",
+  "status": "completed",
+  "summary": "The proposed architecture is the smallest safe change and matches the approved Story 3 requirements, including the human trim amendment. It reuses the existing controller, EmployeeService and in-memory LinkedHashMap, with no new layers, dependencies or databases. One non-critical correction is needed: add docs/api-docs.md to the affected files and the documentation impact, with a human-review gate. No blockers.",
+  "artifacts": [
+    "user-stories/story3.md",
+    ".sdlc/claude/story3/run-003/requirements.json",
+    ".sdlc/claude/story3/run-003/architecture.json",
+    "src/main/java/com/example/employeeapidocsync/Employee.java",
+    "src/main/java/com/example/employeeapidocsync/CreateEmployeeRequest.java",
+    "src/main/java/com/example/employeeapidocsync/EmployeeService.java",
+    "src/main/java/com/example/employeeapidocsync/EmployeeController.java",
+    "src/test/java/com/example/employeeapidocsync/EmployeeApiDocSyncApplicationTests.java",
+    "src/test/java/com/example/employeeapidocsync/OpenApiDocumentationTests.java",
+    "docs/api-docs.md"
+  ],
+  "decisions": [
+    "approval: pending - Design Review approval has not been given by the human. A completed handoff or a positive technical review is not approval.",
+    "Recorded human decision: Requirements in run-003/requirements.json are APPROVED, with the amendment 'Trim surrounding spaces before matching'. The department query value is trimmed before case-insensitive exact matching. Empty after trim returns HTTP 200 []. Omitted returns all employees. Unknown returns HTTP 200 []. The amendment supersedes the requirements no-trim assumption.",
+    "Recorded human decision: Architecture in run-003/architecture.json is APPROVED (human reply: 'Approved').",
+    "Review outcome: PASS with one minor correction. D1-D7 trace to FR1-FR10 and AC1-AC9, and the trim amendment is correctly reflected in D3 and D7. I did not reinterpret the approved requirements or invent behavior.",
+    "Minimality: Reusing EmployeeController and EmployeeService with the in-memory map is the smallest change. Filtering stays in the service and the controller stays thin. I verified that EmployeeService.create is the only 'new Employee(' call site in src, so the constructor change is contained. The existing tests build requests as JSON, so they are unaffected by the new record components.",
+    "API compatibility: The design is correct. The parameter is required=false with no defaultValue, so null (omitted) returns all and the empty string returns []. The null check must come before trim() to avoid a NullPointerException. GET /api/employees/{id}, the 404 body, the POST 201 and 400 behavior, and POST without department (department is null) are unchanged. The additive 'department' JSON property is acceptable.",
+    "Correction 1 (minor, non-blocking): D3 says 'keeping the no-arg findAll() if other callers need it'. Make this concrete. The controller is the only caller, so replace findAll() with findAll(String department), or have the no-arg method delegate to it, to avoid dead code.",
+    "Correction 2 (minor, non-blocking): docs/api-docs.md exists but is missing from the architecture artifacts and decisions. Add it as an affected file. The implementation plan should include an update documenting the optional department query parameter (case-insensitive, trimmed, exact match, blank returns [], unknown returns []) and the department field in the Employee and CreateEmployeeRequest schemas. This API documentation change must stay behind the human-review gate before it is finalized.",
+    "Correction 3 (minor, non-blocking): D7 should also assert in tests that the department value of an employee created with surrounding spaces is stored as given. D4 states this is the intended behavior. Also assert that a null-department employee is excluded from a filtered result and still appears in the unfiltered list.",
+    "Test coverage: The D7 cases cover AC1-AC9, including match, case variation, trim, omitted, empty, whitespace-only, unknown, partial, and POST with and without department. The OpenApiDocumentationTests exact property-set updates and the optional query parameter assertion are appropriate. Run the full regression suite.",
+    "Documentation impact: OpenAPI is annotation-driven. The new record components and @RequestParam with @Parameter generate the schema and the parameter without changing paths, operations or response codes. docs/api-docs.md needs a manual update (see Correction 2)."
+  ],
+  "blockers": [],
+  "next_agent": "planning"
+}

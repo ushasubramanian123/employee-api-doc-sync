@@ -1,0 +1,27 @@
+{
+  "stage": "developer",
+  "status": "completed",
+  "summary": "Implemented approved tasks T1-T5 for Story 3 using the existing controller, EmployeeService and in-memory map. Added optional department to Employee and CreateEmployeeRequest, an optional department query parameter on GET /api/employees with trimmed, case-insensitive exact filtering, new and updated tests, and a proposed docs/api-docs.md update. Focused and full Maven runs both passed (12 tests, 0 failures, 0 errors).",
+  "artifacts": [
+    "src/main/java/com/example/employeeapidocsync/Employee.java",
+    "src/main/java/com/example/employeeapidocsync/CreateEmployeeRequest.java",
+    "src/main/java/com/example/employeeapidocsync/EmployeeService.java",
+    "src/main/java/com/example/employeeapidocsync/EmployeeController.java",
+    "src/test/java/com/example/employeeapidocsync/EmployeeApiDocSyncApplicationTests.java",
+    "src/test/java/com/example/employeeapidocsync/OpenApiDocumentationTests.java",
+    "docs/api-docs.md",
+    "Test evidence: mvn -Dtest=EmployeeApiDocSyncApplicationTests,OpenApiDocumentationTests test -> Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, BUILD SUCCESS (9 in EmployeeApiDocSyncApplicationTests, 3 in OpenApiDocumentationTests)",
+    "Test evidence: mvn test -> Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, BUILD SUCCESS"
+  ],
+  "decisions": [
+    "T1: added 'String department' as the last component of Employee and CreateEmployeeRequest with @Schema(description, nullable) only and no validation, so POST without department still returns 201 with null department.",
+    "T2: replaced EmployeeService.findAll() with synchronized findAll(String department). null returns all in insertion order; the filter is trimmed after the null check; empty after trim returns []; otherwise equalsIgnoreCase on non-null departments. create stores request.department() as given (no trimming or case change). Controller uses @RequestParam(required = false) with @Parameter description and no defaultValue and holds no filter logic. grep confirmed no remaining findAll() no-arg references.",
+    "T3: added tests for match, case variation, trimmed ' IT ', omitted returns all, empty and whitespace-only return 200 [], unknown returns 200 [], partial 'I' no match, POST with and without department, department stored as given (' IT ' untrimmed in POST response and GET by ID), and null-department employee present in unfiltered list but excluded from filtered results. Updated OpenApiDocumentationTests property sets to include department and added an assertion that department is an optional string query parameter on GET /api/employees. Paths, operations and response codes unchanged. New data-creating tests use @DirtiesContext AFTER_METHOD to isolate the in-memory store.",
+    "T4: docs/api-docs.md updated with department schema fields, query parameter rules and examples. This documentation change is PENDING HUMAN REVIEW and is NOT final; it is left for the user to review. It was not treated as reviewed.",
+    "T5: ran 'mvn -Dtest=EmployeeApiDocSyncApplicationTests,OpenApiDocumentationTests test' -> 12 run, 0 failures, 0 errors, BUILD SUCCESS; then 'mvn test' -> 12 run, 0 failures, 0 errors, BUILD SUCCESS.",
+    "Scope: no database, new service, dependency or Git operation. No changes to .github/, .claude/, .sdlc/evidence/, hooks, run-001, run-002 or the run-003 input handoffs. ApiExceptionHandler, ErrorResponse and GET by ID behavior unchanged.",
+    "Remaining compatibility risk: Employee JSON responses now include a 'department' property (null when not supplied), an additive change that could affect clients that reject unknown fields."
+  ],
+  "blockers": [],
+  "next_agent": "code-review"
+}

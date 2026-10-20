@@ -1,0 +1,25 @@
+{
+  "stage": "pr",
+  "status": "blocked",
+  "summary": "Story 3 run-003 PR prepared and 29 approved files staged (staging only). Commit, push and PR creation are pending separate authorizations.",
+  "artifacts": [
+    "Branch: feature/claude-skill-driven-sdlc; base: main",
+    "Staged (29): src/main/java/com/example/employeeapidocsync/{Employee,CreateEmployeeRequest,EmployeeService,EmployeeController}.java; src/test/java/com/example/employeeapidocsync/{EmployeeApiDocSyncApplicationTests,OpenApiDocumentationTests}.java; docs/api-docs.md; .claude/agents/{architecture,code-review,design-review,developer,planning,pr,requirements,verification}.md; .claude/skills/sdlc/SKILL.md; .claude/skills/validate-handoff/SKILL.md; .claude/skills/validate-handoff/scripts/validate-handoff.ps1; CLAUDE.md; user-stories/story3.md; .sdlc/claude/story3/run-001/requirements.json; .sdlc/claude/story3/run-002/requirements.json; .sdlc/claude/story3/run-003/{requirements,architecture,design-review,implementation-plan,implementation,code-review,verification}.json",
+    "Not staged: .vscode/, .github/ (incl. modified verification.instructions.md and .github/skills/), .sdlc/evidence/, target/, pr.json",
+    "Test evidence (verification.json): focused and full mvn test, 12 tests run, 0 failures, 0 errors, BUILD SUCCESS",
+    "Secret scan of selected files: no secrets found; git diff --cached --stat: 29 files changed, 1250 insertions, 20 deletions"
+  ],
+  "decisions": [
+    "Staging authorized and completed with explicit paths only; staged set verified via git diff --cached --name-status matches the approved list.",
+    "Prior Story 3 runs and Claude SDLC setup included in scope at explicit user request.",
+    "Proposed commit message: 'Add employee department filter (Story 3) and Claude SDLC agents' | Body: 'Add optional department query filter to GET /employees with tests and API docs updates. Add Claude SDLC agents, skills, and Story 3 run handoffs.' | Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "Proposed PR title: Story 3: Employee search by department",
+    "Proposed PR description: Summary: adds department filtering for employee search, updates Employee/CreateEmployeeRequest/service/controller, extends application and OpenAPI tests, and updates docs/api-docs.md. Also adds Claude SDLC agents, skills, CLAUDE.md, story file and story-scoped handoffs. Testing: mvn test, 12 run, 0 failures, 0 errors, BUILD SUCCESS. Base main, head feature/claude-skill-driven-sdlc. | 🤖 Generated with [Claude Code](https://claude.com/claude-code)"
+  ],
+  "blockers": [
+    "Pending explicit authorization to create the commit",
+    "Pending explicit authorization to push branch feature/claude-skill-driven-sdlc",
+    "Pending explicit authorization to create the GitHub PR"
+  ],
+  "next_agent": null
+}
