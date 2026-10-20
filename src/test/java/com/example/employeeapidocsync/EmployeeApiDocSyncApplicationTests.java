@@ -80,6 +80,87 @@ class EmployeeApiDocSyncApplicationTests {
         assertInvalidEmployee("{");
     }
 
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    void departmentFilterMatchesCaseInsensitivelyAndExactly() throws Exception {
+        createEmployee("A", "a@example.com", "IT");
+        createEmployee("B", "b@example.com", "HR");
+        createEmployee("C", "c@example.com", "it");
+        createEmployee("D", "d@example.com", null);
+
+        mockMvc.perform(get("/api/employees").param("department", "IT"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].name").value("A"))
+                .andExpect(jsonPath("$[1].name").value("C"));
+        mockMvc.perform(get("/api/employees").param("department", "it"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
+        mockMvc.perform(get("/api/employees").param("department", " IT "))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
+        mockMvc.perform(get("/api/employees").param("department", "I"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isEmpty());
+        mockMvc.perform(get("/api/employees").param("department", "Unknown"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+        mockMvc.perform(get("/api/employees"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(4));
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    void blankAndWhitespaceDepartmentReturnEmptyListEvenWhenEmployeesExist() throws Exception {
+        createEmployee("A", "a@example.com", "IT");
+
+        mockMvc.perform(get("/api/employees").param("department", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+        mockMvc.perform(get("/api/employees").param("department", "   "))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    void postWithDepartmentEchoesItAndStoresItAsGiven() throws Exception {
+        mockMvc.perform(post("/api/employees")
+                        .contentType(APPLICATION_JSON)
+                        .content("{\"name\":\"A\",\"email\":\"a@example.com\",\"department\":\" IT \"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.department").value(" IT "));
+        mockMvc.perform(get("/api/employees/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.department").value(" IT "));
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    void postWithoutDepartmentStillSucceedsWithNullDepartment() throws Exception {
+        mockMvc.perform(post("/api/employees")
+                        .contentType(APPLICATION_JSON)
+                        .content("{\"name\":\"A\",\"email\":\"a@example.com\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("A"))
+                .andExpect(jsonPath("$.email").value("a@example.com"))
+                .andExpect(jsonPath("$.department").value(org.hamcrest.Matchers.nullValue()));
+    }
+
+    private void createEmployee(String name, String email, String department) throws Exception {
+        String dept = department == null ? "" : ",\"department\":\"" + department + "\"";
+        mockMvc.perform(post("/api/employees")
+                        .contentType(APPLICATION_JSON)
+                        .content("{\"name\":\"" + name + "\",\"email\":\"" + email + "\"" + dept + "}"))
+                .andExpect(status().isCreated());
+    }
+
     private void assertInvalidEmployee(String body) throws Exception {
         mockMvc.perform(post("/api/employees")
                         .contentType(APPLICATION_JSON)

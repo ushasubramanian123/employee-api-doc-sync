@@ -49,17 +49,19 @@ class OpenApiDocumentationTests {
     void documentsRequestAndResponseSchemasWithTheirExistingFieldsAndTypes() throws Exception {
         JsonNode schemas = getOpenApiDocument().path("components").path("schemas");
 
-        assertSchemaProperties(schemas, "Employee", Set.of("id", "name", "email"));
+        assertSchemaProperties(schemas, "Employee", Set.of("id", "name", "email", "department"));
         assertThat(schemas.path("Employee").path("properties").path("id").path("type").asText())
                 .isEqualTo("integer");
         assertThat(schemas.path("Employee").path("properties").path("id").path("format").asText())
                 .isEqualTo("int64");
         assertStringProperty(schemas, "Employee", "name");
         assertStringProperty(schemas, "Employee", "email");
+        assertStringProperty(schemas, "Employee", "department");
 
-        assertSchemaProperties(schemas, "CreateEmployeeRequest", Set.of("name", "email"));
+        assertSchemaProperties(schemas, "CreateEmployeeRequest", Set.of("name", "email", "department"));
         assertStringProperty(schemas, "CreateEmployeeRequest", "name");
         assertStringProperty(schemas, "CreateEmployeeRequest", "email");
+        assertStringProperty(schemas, "CreateEmployeeRequest", "department");
 
         assertSchemaProperties(schemas, "ErrorResponse", Set.of("error"));
         assertStringProperty(schemas, "ErrorResponse", "error");
@@ -71,6 +73,16 @@ class OpenApiDocumentationTests {
 
         JsonNode collectionGet = paths.path("/api/employees").path("get");
         assertThat(fieldNames(collectionGet.path("responses"))).containsExactly("200");
+        JsonNode departmentParam = null;
+        for (JsonNode parameter : collectionGet.path("parameters")) {
+            if ("department".equals(parameter.path("name").asText())) {
+                departmentParam = parameter;
+            }
+        }
+        assertThat(departmentParam).isNotNull();
+        assertThat(departmentParam.path("in").asText()).isEqualTo("query");
+        assertThat(departmentParam.path("required").asBoolean()).isFalse();
+        assertThat(departmentParam.path("schema").path("type").asText()).isEqualTo("string");
         JsonNode collectionSchema = responseSchema(collectionGet, "200");
         assertThat(collectionSchema.path("type").asText()).isEqualTo("array");
         assertThat(collectionSchema.path("items").path("$ref").asText())

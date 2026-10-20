@@ -1,0 +1,35 @@
+{
+  "stage": "architecture",
+  "status": "completed",
+  "summary": "Smallest change reusing the existing controller, EmployeeService and in-memory LinkedHashMap: add optional String department to the Employee record and CreateEmployeeRequest; add an optional department @RequestParam (required = false, no defaultValue) to GET /api/employees; filter in EmployeeService with trim plus case-insensitive exact match; update OpenAPI annotations and focused tests. No new layers, dependencies, databases or services.",
+  "artifacts": [
+    ".sdlc/claude/story3/run-003/requirements.json",
+    "user-stories/story3.md",
+    "src/main/java/com/example/employeeapidocsync/Employee.java",
+    "src/main/java/com/example/employeeapidocsync/CreateEmployeeRequest.java",
+    "src/main/java/com/example/employeeapidocsync/EmployeeService.java",
+    "src/main/java/com/example/employeeapidocsync/EmployeeController.java",
+    "src/test/java/com/example/employeeapidocsync/EmployeeApiDocSyncApplicationTests.java",
+    "src/test/java/com/example/employeeapidocsync/OpenApiDocumentationTests.java"
+  ],
+  "decisions": [
+    "approval: pending - Architecture approval has not been given; completing this handoff does not count as approval.",
+    "Recorded human approval: requirements in run-003/requirements.json were APPROVED (human: 'Approved run-003 requirements, Trim surrounding spaces before matching; proceed to Architecture').",
+    "Recorded human amendment: trim leading/trailing whitespace from the department query value before matching (' IT ' matches 'IT', case-insensitively). This supersedes the requirements assumption 'Non-blank filter values are compared as given, without trimming'. All other approved behavior stands.",
+    "Implemented today: Employee record (id, name, email); CreateEmployeeRequest (name @NotBlank, email @NotBlank @Email); EmployeeService with synchronized findAll/findById/create over an in-memory LinkedHashMap; EmployeeController.findAll() takes no parameters. Everything below is PROPOSED.",
+    "D1 (FR1, FR2): Add 'String department' as the last component of Employee and CreateEmployeeRequest, with @Schema(description, nullable) metadata only and no validation annotations. EmployeeService.create passes request.department() to new Employee(nextId++, name, email, department), stored as given (no normalization on storage).",
+    "D2 (FR3, FR5, FR6): EmployeeController.findAll gets @RequestParam(required = false) String department with an @Parameter(description) annotation and no defaultValue, and delegates to employeeService.findAll(department). Controller stays thin and contains no filtering logic.",
+    "D3 (FR4-FR7, amendment): In EmployeeService add findAll(String department), keeping the no-arg findAll() if other callers need it. Logic: if department == null return all employees (unchanged behavior); else trimmed = department.trim(); if trimmed is empty return List.of(); else return employees whose department is non-null and equalsIgnoreCase(trimmed), preserving insertion order. Unknown and blank both return HTTP 200 [] (never 404). Exact match only, no contains/startsWith.",
+    "D4 (assumptions): Employees with null department never match a non-blank filter. Only the filter value is trimmed; a stored department with surrounding spaces is compared as stored against the trimmed filter. Case-insensitivity uses String.equalsIgnoreCase.",
+    "D5 (FR8): GET /api/employees/{id}, ApiExceptionHandler, ErrorResponse, and the POST status codes and error bodies are unchanged. POST without department still returns 201 with department null.",
+    "D6 (FR9): OpenAPI is produced from annotations and the record components, so adding the component and @RequestParam documents department in the Employee and CreateEmployeeRequest schemas (string) and as an optional query parameter on GET /api/employees. Paths, operations and documented response codes are unchanged.",
+    "D7 (FR10, AC1-AC9): Update EmployeeApiDocSyncApplicationTests with cases for match, case variation, surrounding-space trim, omitted, empty, whitespace-only, unknown, partial (no match), POST with department and POST without department. Update OpenApiDocumentationTests exact property sets to Employee {id, name, email, department} and CreateEmployeeRequest {name, email, department} and assert the optional department query parameter. Run the full regression suite.",
+    "Compatibility: Employee JSON gains an additive 'department' property (null when not supplied); clients that reject unknown fields could be affected, accepted as additive. Existing requests without department and GET by ID keep working.",
+    "Compatibility risk: the Employee canonical constructor changes, so every new Employee(...) call site (EmployeeService.create and any tests) must be updated together.",
+    "Compatibility risk: do not set defaultValue on the request parameter, because it would collapse omitted and blank and break the all-versus-[] distinction. Spring binds ?department= to an empty string, which D3 treats as blank.",
+    "Compatibility note: the OpenApiDocumentationTests exact-property assertions will intentionally fail until updated; this is an expected documentation change, not a regression.",
+    "Out of scope: no new layers, repository, database, dependencies, services, or changes to .github/, hooks, or prior run evidence. No Git operations without separate human approval."
+  ],
+  "blockers": [],
+  "next_agent": "design-review"
+}
